@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
   fetchAllDogs()
   createDogElements()
+  document.querySelector('#good-dog-filter').addEventListener('click', dogFilter)
 })
 
 // FETCH
-function fetchAllDogs() {
-  fetch('http://localhost:3000/pups')
+function fetchAllDogs(url = 'http://localhost:3000/pups') {
+  fetch(url)
     .then(res => res.json())
     .then(data => data.forEach(renderDogBar))
 }
@@ -75,5 +76,18 @@ function renderDog(dog) {
     btn.innerText = 'Bad dog'
   } else {
     btn.innerText = 'Good dog'
+  }
+}
+
+function dogFilter(e) {
+  e.preventDefault()
+  let btn = document.querySelector('#good-dog-filter')
+  document.querySelector('#dog-bar').innerHTML = ""
+  if (btn.innerText === 'Filter good dogs: OFF') {
+    btn.innerText = 'Filter good dogs: ON'
+    fetchAllDogs('http://localhost:3000/pups?isGoodDog=true')
+  } else {
+    btn.innerText = 'Filter good dogs: OFF'
+    fetchAllDogs()
   }
 }
